@@ -19,8 +19,8 @@ SCHEMA = "ods"
 TARGET_TABLE = "fct_earthquake"
 
 # S3
-ACCESS_KEY = Variable.get("access_key")
-SECRET_KEY = Variable.get("secret_key")
+ACCESS_KEY = Variable.get("S3_ACCESS_KEY")
+SECRET_KEY = Variable.get("S3_SECRET_KEY")
 
 # DuckDB
 PASSWORD = Variable.get("pg_password")
@@ -33,7 +33,7 @@ SHORT_DESCRIPTION = "SHORT DESCRIPTION"
 
 args = {
     "owner": OWNER,
-    "start_date": pendulum.datetime(2025, 5, 17, tz="Europe/Moscow"),
+    "start_date": pendulum.datetime(2025, 8, 17, tz="Europe/Moscow"),
     "catchup": True,
     "retries": 3,
     "retry_delay": pendulum.duration(minutes=1),
@@ -154,7 +154,7 @@ with DAG(
         external_dag_id="raw_from_api_to_s3",
         allowed_states=["success"],
         mode="reschedule",
-        timeout=360000,  # длительность работы сенсора
+        timeout=60,  # длительность работы сенсора
         poke_interval=60,  # частота проверки
     )
 
