@@ -9,7 +9,7 @@ from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
 
 # Конфигурация DAG
-OWNER = "i.korsakov"
+OWNER = "k.bogatyrev"
 DAG_ID = "raw_from_s3_to_pg"
 
 # Используемые таблицы в DAG
@@ -33,10 +33,10 @@ SHORT_DESCRIPTION = "SHORT DESCRIPTION"
 
 args = {
     "owner": OWNER,
-    "start_date": pendulum.datetime(2025, 5, 1, tz="Europe/Moscow"),
+    "start_date": pendulum.datetime(2025, 5, 17, tz="Europe/Moscow"),
     "catchup": True,
     "retries": 3,
-    "retry_delay": pendulum.duration(hours=1),
+    "retry_delay": pendulum.duration(minutes=1),
 }
 
 
