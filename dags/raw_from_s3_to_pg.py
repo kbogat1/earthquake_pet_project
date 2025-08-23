@@ -18,8 +18,7 @@ SOURCE = "earthquake"
 SCHEMA = "ods"
 TARGET_TABLE = "fct_earthquake"
 
-# S3
-ACCESS_KEY = Variable.get("S3_ACCESS_KEY")
+# S3ACCESS_KEY = Variable.get("S3_ACCESS_KEY")
 SECRET_KEY = Variable.get("S3_SECRET_KEY")
 
 # DuckDB
