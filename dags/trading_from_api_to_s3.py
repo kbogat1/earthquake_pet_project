@@ -45,7 +45,6 @@ def get_data(**context):
         SET s3_access_key_id = '{ACCESS_KEY}';
         SET s3_secret_access_key = '{SECRET_KEY}';
         SET s3_use_ssl = FALSE;
-);
 
 COPY (
 SELECT * FROM read_csv_auto('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo&datatype=csv')
