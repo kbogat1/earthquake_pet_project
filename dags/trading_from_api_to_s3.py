@@ -1,5 +1,3 @@
-import logging
-
 import duckdb
 import pendulum
 from airflow import DAG
@@ -7,7 +5,6 @@ from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
-from dags.raw_from_api_to_s3 import start
 
 # Конфигурация DAG
 OWNER = 'k.bogatyrev'
@@ -29,10 +26,10 @@ SHORT_DESCRIPTION = "SHORT DESCRIPTION"
 
 default_args = {
     'owner': OWNER,
-    'start_date': pendulum(2025, 8, 22).format('YYYY-MM-DD'),
+    'start_date': pendulum.datetime(2025, 8, 22, tz="Europe/Moscow"),
     'catchup': False,
     'retries': 1,
-    'retry_delay': pendulum(minutes=5),
+    'retry_delay': pendulum.duration(minutes=5),
 }
 
 def get_data(**context):
@@ -40,12 +37,14 @@ def get_data(**context):
 
     con.sql(
     f"""
-CREATE OR REPLACE SECRET secret (
-    TYPE s3,
-    PROVIDER config,
-    KEY_ID {ACCESS_KEY},
-    SECRET {SECRET_KEY},
-    REGION 'us-west-rack-2'
+        SET TIMEZONE='UTC';
+        INSTALL httpfs;
+        LOAD httpfs;
+        SET s3_url_style = 'path';
+        SET s3_endpoint = 'minio:9000';
+        SET s3_access_key_id = '{ACCESS_KEY}';
+        SET s3_secret_access_key = '{SECRET_KEY}';
+        SET s3_use_ssl = FALSE;
 );
 
 COPY (
@@ -79,5 +78,5 @@ with DAG(
         task_id="end"
     )
 
-start >> get_data >> end
+    start >> get_data >> end
 
